@@ -162,6 +162,7 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
           width: 100%;
           border-collapse: collapse;
           margin-bottom: 2rem;
+          table-layout: fixed;
         }
         
         .items-table thead tr {
@@ -204,6 +205,23 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
         .items-table td:last-child {
           text-align: right;
           font-weight: 500;
+        }
+
+        .items-table th:nth-child(1),
+        .items-table td:nth-child(1) {
+          width: 50%;
+        }
+        .items-table th:nth-child(2),
+        .items-table td:nth-child(2) {
+          width: 15%;
+        }
+        .items-table th:nth-child(3),
+        .items-table td:nth-child(3) {
+          width: 15%;
+        }
+        .items-table th:nth-child(4),
+        .items-table td:nth-child(4) {
+          width: 20%;
         }
         
         .empty-row {
@@ -599,6 +617,7 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 2rem;
+            table-layout: fixed;
           }
           
           .items-table thead tr {
@@ -641,6 +660,23 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
           .items-table td:last-child {
             text-align: right;
             font-weight: 500;
+          }
+
+          .items-table th:nth-child(1),
+          .items-table td:nth-child(1) {
+            width: 50%;
+          }
+          .items-table th:nth-child(2),
+          .items-table td:nth-child(2) {
+            width: 15%;
+          }
+          .items-table th:nth-child(3),
+          .items-table td:nth-child(3) {
+            width: 15%;
+          }
+          .items-table th:nth-child(4),
+          .items-table td:nth-child(4) {
+            width: 20%;
           }
           
           .empty-row {
@@ -1059,7 +1095,7 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
               >
                 <Card className="print:shadow-none print:border-none border-none rounded-3xl shadow-none bg-transparent overflow-hidden">
                   <CardContent
-                    className="p-0 bg-white shadow-2xl shadow-black/20 mx-auto relative rounded-2xl"
+                    className="p-0 bg-white mx-auto relative border border-slate-200 overflow-y-scroll overflow-x-hidden custom-scrollbar"
                     style={{
                       width: "210mm",
                       minHeight: "297mm",
