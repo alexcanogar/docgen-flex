@@ -109,7 +109,6 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
                   <SelectContent>
                     <SelectItem value="EUR">EUR (€)</SelectItem>
                     <SelectItem value="USD">USD ($)</SelectItem>
-                    <SelectItem value="GBP">GBP (£)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
