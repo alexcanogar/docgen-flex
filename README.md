@@ -15,6 +15,6 @@ Crea **facturas**, **recibos**, **presupuestos** o lo que se te ocurra, con tota
 
 ## 🖼️ Captura rápida
 
-<img width="1509" height="788" alt="image" src="https://github.com/user-attachments/assets/cecc7541-2671-466a-b568-8f251a43cf62" />
-<img width="1519" height="789" alt="image" src="https://github.com/user-attachments/assets/55027b12-0ebf-4732-adbe-88d93f414ab1" />
-<img width="1514" height="785" alt="image" src="https://github.com/user-attachments/assets/0ec4fbd9-db29-4a8a-8b0c-cc3d3bd54264" />
+<img width="1893" height="937" alt="image" src="https://github.com/user-attachments/assets/85ec58fd-b170-463a-866e-7904f9033c95" />
+<img width="1890" height="945" alt="image" src="https://github.com/user-attachments/assets/7fd5f2d7-8750-4ac2-987b-bd6265f83d95" />
+<img width="1904" height="949" alt="image" src="https://github.com/user-attachments/assets/fe5625c9-3149-48a7-84e4-b961457a579d" />
