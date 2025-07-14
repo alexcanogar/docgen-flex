@@ -169,7 +169,11 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
                   <div className="space-y-4">
                     <div className="backdrop-blur-sm bg-white/40 border-2 border-dashed border-white/50 rounded-xl p-6 text-center hover:border-white/60 transition-colors duration-300">
                       {invoice.logoUrl ? (
-                        <img src={invoice.logoUrl || "/placeholder.svg"} alt="Logo" className="max-h-20 mx-auto mb-2" />
+                        <img
+                          src={invoice.logoUrl || "/placeholder.svg"}
+                          alt="Logo"
+                          className="max-h-20 mx-auto mb-2 rounded-xl object-contain" // Added rounded-xl
+                        />
                       ) : (
                         <div className="text-gray-600 mb-2">
                           <Upload className="w-8 h-8 mx-auto mb-2" />
@@ -178,7 +182,7 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
                       )}
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/svg+xml,image/webp" // Restricted file types
                         onChange={handleLogoUpload}
                         className="hidden"
                         id="logo-upload"

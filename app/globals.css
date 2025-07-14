@@ -58,7 +58,6 @@
   }
 }
 
-/* Prevent layout shift from scrollbar */
 html {
   overflow-y: scroll;
 }
@@ -90,9 +89,9 @@ html {
   font-variant-numeric: tabular-nums;
 }
 
-/* Custom scrollbar styles */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
+  height: 12px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -100,18 +99,17 @@ html {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #d1d5db; /* gray-300 */
+  background-color: #d1d5db; 
   border-radius: 20px;
   border: 2px solid white;
   background-clip: content-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #9ca3af; /* gray-400 */
+  background-color: #9ca3af;
 }
 
-/* For Firefox */
 .custom-scrollbar {
-  scrollbar-width: thin;
+  scrollbar-width: auto;
   scrollbar-color: #d1d5db white;
 }

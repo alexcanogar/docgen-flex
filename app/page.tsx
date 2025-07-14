@@ -30,7 +30,7 @@ const initialInvoice: Invoice = {
   items: [
     {
       id: "1",
-      description: 'Producto ejemplo 01',
+      description: "Producto ejemplo 01",
       hours: 2,
       rate: 35.42,
     },
