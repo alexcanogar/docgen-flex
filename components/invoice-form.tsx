@@ -148,18 +148,18 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
       {/* Main Content Container with Liquid Glass Effect */}
       <div className="relative">
         {/* Floating glass container */}
-        <div className="backdrop-blur-2xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl shadow-black/10 relative overflow-hidden">
+        <div className="backdrop-blur-2xl bg-white/10 border border-white/20 rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl shadow-black/10 relative overflow-hidden">
           {/* Multiple glass reflection layers */}
           <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent opacity-50 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-tl from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-pink-500/10 to-transparent rounded-full blur-2xl" />
 
-          <div className="relative z-10 space-y-8">
+          <div className="relative z-10 space-y-6">
             {/* Company Information Cards Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
               {/* Información de la empresa */}
-              <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+              <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-4 md:p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -249,7 +249,7 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
               </div>
 
               {/* Información del cliente */}
-              <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+              <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-4 md:p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -315,7 +315,7 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
               </div>
 
               {/* Detalles de la factura */}
-              <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+              <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-4 md:p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -409,18 +409,18 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
             </div>
 
             {/* Items Table */}
-            <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-6 shadow-lg shadow-black/5 relative overflow-hidden">
+            <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-4 md:p-6 shadow-lg shadow-black/5 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-50 pointer-events-none" />
               <div className="relative z-10">
                 <h3 className="text-lg font-semibold text-gray-800 mb-6 flex items-center">
                   <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
                   Elementos
                 </h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
+                <div className="overflow-x-auto custom-scrollbar">
+                  <table className="w-full min-w-[700px]">
                     <thead>
                       <tr className="bg-slate-800 text-white rounded-lg">
-                        <th className="text-left p-3 rounded-l-md w-[60%]">
+                        <th className="text-left p-3 rounded-l-md">
                           <Input
                             value={invoice.tableHeaders.description}
                             onChange={(e) =>
@@ -432,7 +432,7 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
                             placeholder="Artículo"
                           />
                         </th>
-                        <th className="text-center p-3 w-[10%]">
+                        <th className="text-center p-3">
                           <Input
                             value={invoice.tableHeaders.hours}
                             onChange={(e) =>
@@ -444,7 +444,7 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
                             placeholder="Horas"
                           />
                         </th>
-                        <th className="text-center p-3 w-[10%]">
+                        <th className="text-center p-3">
                           <Input
                             value={invoice.tableHeaders.rate}
                             onChange={(e) =>
@@ -456,8 +456,8 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
                             placeholder="Precio Hora"
                           />
                         </th>
-                        <th className="text-center p-3 w-[10%]">Total</th>
-                        <th className="w-[5%] rounded-r-md"></th>
+                        <th className="text-center p-3 min-w-[120px]">Total</th>
+                        <th className="rounded-r-md"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -494,7 +494,7 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
                               />
                             </div>
                           </td>
-                          <td className="p-3 text-center">
+                          <td className="p-3 text-center min-w-[120px]">
                             <span className="font-medium text-gray-800">
                               {((Number(item.hours) || 0) * (Number(item.rate) || 0)).toFixed(2)}{" "}
                               {invoice.currency === "EUR" ? "€" : "$"}
@@ -528,10 +528,10 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
             </div>
 
             {/* Bottom Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
               {/* Notas y términos */}
               <div className="space-y-6">
-                <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+                <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-4 md:p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -548,7 +548,7 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
                   </div>
                 </div>
 
-                <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+                <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-4 md:p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -567,7 +567,7 @@ export function InvoiceForm({ invoice, onChange, activeTab, setActiveTab }: Invo
               </div>
 
               {/* Totales */}
-              <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+              <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl p-4 md:p-6 shadow-lg shadow-black/5 relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-semibold text-gray-800 mb-6 flex items-center">

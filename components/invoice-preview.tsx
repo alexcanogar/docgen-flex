@@ -1,9 +1,8 @@
 "use client"
 
-import type { Invoice, InvoiceItem } from "@/types/invoice"
+import type { Invoice } from "@/types/invoice"
 import { Card, CardContent } from "@/components/ui/card"
 import { Download, PrinterIcon as Print } from "lucide-react"
-import { useRef } from "react"
 
 interface InvoicePreviewProps {
   invoice: Invoice
@@ -12,8 +11,6 @@ interface InvoicePreviewProps {
 }
 
 export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePreviewProps) {
-  const invoiceRef = useRef<HTMLDivElement>(null)
-
   const calculateSubtotal = () => {
     return invoice.items.reduce((sum, item) => {
       return sum + (Number(item.hours) || 0) * (Number(item.rate) || 0)
@@ -948,65 +945,9 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
     }
   }
 
-  const chunk = <T,>(arr: T[], size: number): T[][] =>
-    Array.from({ length: Math.ceil(arr.length / size) }, (v, i) => arr.slice(i * size, i * size + size))
-
   const isFromFilled = invoice.from.name || invoice.from.address || invoice.from.email || invoice.from.phone
   const isToFilled = invoice.to.name || invoice.to.address || invoice.to.email || invoice.to.phone
-
-  // --- Lógica de Paginación ---
-  const ITEMS_PER_PAGE_FIRST = 15 // Ajusta este valor según el diseño
-  const ITEMS_PER_PAGE_SUBSEQUENT = 25 // Más espacio en páginas siguientes sin cabecera
-
   const items = invoice.items.filter((item) => item.description.trim() !== "")
-  let pages: InvoiceItem[][] = []
-
-  if (items.length <= ITEMS_PER_PAGE_FIRST) {
-    pages.push(items)
-  } else {
-    const firstPageItems = items.slice(0, ITEMS_PER_PAGE_FIRST)
-    pages.push(firstPageItems)
-
-    const remainingItems = items.slice(ITEMS_PER_PAGE_FIRST)
-    const remainingPages = chunk(remainingItems, ITEMS_PER_PAGE_SUBSEQUENT)
-    pages = pages.concat(remainingPages)
-  }
-  // --- Fin de la Lógica de Paginación ---
-
-  // Agregar estilos de animación
-  const styles = `
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-    
-    .animate-float {
-      animation: float 6s ease-in-out infinite;
-    }
-  `
-
-  // Insertar estilos en el head si no existen
-  if (typeof document !== "undefined" && !document.getElementById("liquid-glass-styles")) {
-    const styleSheet = document.createElement("style")
-    styleSheet.id = "liquid-glass-styles"
-    styleSheet.textContent = styles
-    document.head.appendChild(styleSheet)
-  }
 
   return (
     <div className="w-full max-w-7xl mx-auto relative">
@@ -1022,8 +963,8 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
           <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent opacity-60 pointer-events-none" />
           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
 
-          <div className="relative z-10 flex justify-between items-center print:hidden">
-            <div className="flex space-x-3">
+          <div className="relative z-10 flex flex-col sm:flex-row justify-between items-center print:hidden w-full gap-4">
+            <div className="flex flex-wrap justify-center sm:justify-start gap-3 w-full sm:w-auto">
               <button
                 onClick={handlePrint}
                 className="group relative overflow-hidden backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 rounded-2xl px-6 py-3 transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
@@ -1047,7 +988,7 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
               </button>
             </div>
 
-            <div className="flex space-x-1 backdrop-blur-md bg-white/10 border border-white/20 p-1.5 rounded-2xl">
+            <div className="flex flex-wrap justify-center sm:justify-end gap-1 w-full sm:w-auto backdrop-blur-md bg-white/10 border border-white/20 p-1.5 rounded-2xl">
               <button
                 onClick={() => setActiveTab("edit")}
                 className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ease-out ${
@@ -1079,223 +1020,175 @@ export function InvoicePreview({ invoice, activeTab, setActiveTab }: InvoicePrev
         </div>
       </div>
 
-      {/* Document Container with Liquid Glass Effect */}
+      {/* Document Container */}
       <div className="relative">
-        {/* Floating glass container */}
-        <div className="relative overflow-hidden">
-          <div className="relative z-10 print:shadow-none print:border-none border-transparent shadow-none rounded-none bg-transparent space-y-8">
-            {pages.map((pageItems, pageIndex) => (
-              <div
-                key={pageIndex}
-                className="transform transition-all duration-700 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/20"
-                style={{
-                  animationDelay: `${pageIndex * 100}ms`,
-                  animation: "fadeInUp 0.8s ease-out forwards",
-                }}
-              >
-                <Card className="print:shadow-none print:border-none border-none rounded-3xl shadow-none bg-transparent overflow-hidden">
-                  <CardContent
-                    className="p-0 bg-white mx-auto relative border border-slate-200 overflow-y-scroll overflow-x-hidden custom-scrollbar"
-                    style={{
-                      width: "210mm",
-                      minHeight: "297mm",
-                      maxWidth: "100%",
-                      aspectRatio: "210/297",
-                    }}
-                  >
-                    {/* Subtle inner glow */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50/50 to-gray-100/30 pointer-events-none" />
-
-                    <div className="relative z-10 p-[1.5cm] h-full flex flex-col">
-                      <div className="flex-1">
-                        {/* Header (solo en la primera página) */}
-                        {pageIndex === 0 && (
-                          <>
-                            <div className="flex justify-between items-start mb-8">
-                              <div>
-                                <h1 className="text-3xl font-bold text-gray-900 mb-2">{invoice.title}</h1>
-                                <div className="text-gray-600">
-                                  {invoice.id && <p className="text-lg">#{invoice.id}</p>}
-                                  <p>
-                                    Fecha:{" "}
-                                    {invoice.date
-                                      ? new Date(invoice.date).toLocaleDateString("es-ES")
-                                      : "No especificada"}
-                                  </p>
-                                  {invoice.dueDate && (
-                                    <p>Vencimiento: {new Date(invoice.dueDate).toLocaleDateString("es-ES")}</p>
-                                  )}
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                {invoice.logoUrl ? (
-                                  <img
-                                    src={invoice.logoUrl || "/placeholder.svg"}
-                                    alt="Logo de la empresa"
-                                    className="max-h-16 max-w-32 object-contain"
-                                  />
-                                ) : null}
-                              </div>
-                            </div>
-
-                            {/* From/To (solo en la primera página) */}
-                            {(isFromFilled || isToFilled) && (
-                              <div className="grid grid-cols-2 gap-8 mb-8">
-                                {isFromFilled && (
-                                  <div>
-                                    <h3 className="font-semibold text-gray-900 mb-2">De:</h3>
-                                    <div className="text-gray-700 text-sm">
-                                      {invoice.from.name && <p className="font-medium">{invoice.from.name}</p>}
-                                      {invoice.from.address && (
-                                        <p className="whitespace-pre-line">{invoice.from.address}</p>
-                                      )}
-                                      {invoice.from.email && <p>{invoice.from.email}</p>}
-                                      {invoice.from.phone && <p>{invoice.from.phone}</p>}
-                                    </div>
-                                  </div>
-                                )}
-                                {isToFilled && (
-                                  <div>
-                                    <h3 className="font-semibold text-gray-900 mb-2">Para:</h3>
-                                    <div className="text-gray-700 text-sm">
-                                      {invoice.to.name && <p className="font-medium">{invoice.to.name}</p>}
-                                      {invoice.to.address && (
-                                        <p className="whitespace-pre-line">{invoice.to.address}</p>
-                                      )}
-                                      {invoice.to.email && <p>{invoice.to.email}</p>}
-                                      {invoice.to.phone && <p>{invoice.to.phone}</p>}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </>
-                        )}
-
-                        {/* Items Table */}
-                        <div className="mb-8">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="bg-slate-800 text-white">
-                                <th className="text-left p-3 rounded-l-md w-1/2">{invoice.tableHeaders.description}</th>
-                                <th className="text-center p-3">{invoice.tableHeaders.hours}</th>
-                                <th className="text-center p-3">{invoice.tableHeaders.rate}</th>
-                                <th className="text-right p-3 rounded-r-md">Total</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {pageItems.map((item) => (
-                                <tr key={item.id} className="border-b">
-                                  <td className="p-3">{item.description}</td>
-                                  <td className="p-3 text-center">{item.hours}</td>
-                                  <td className="p-3 text-center">
-                                    {currencySymbol} {(Number(item.rate) || 0).toFixed(2)}
-                                  </td>
-                                  <td className="p-3 text-right font-medium">
-                                    {currencySymbol} {((Number(item.hours) || 0) * (Number(item.rate) || 0)).toFixed(2)}
-                                  </td>
-                                </tr>
-                              ))}
-                              {items.length === 0 && pageIndex === 0 && (
-                                <tr>
-                                  <td colSpan={4} className="p-8 text-center text-gray-400 italic">
-                                    No hay artículos añadidos
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-
-                      {/* Footer (solo en la última página) */}
-                      {pageIndex === pages.length - 1 && ( // Apply padding to the footer div itself
-                        <div className="mt-auto border-t border-gray-200 pt-6 pb-[1.5cm]">
-                          <div className="grid grid-cols-2 gap-8">
-                            {/* Notes and Terms */}
-                            <div className="space-y-6 text-sm">
-                              {invoice.notes?.trim() && (
-                                <div>
-                                  <h4 className="font-medium text-gray-900 mb-2">Notas:</h4>
-                                  <p className="text-gray-700 whitespace-pre-line">{invoice.notes}</p>
-                                </div>
-                              )}
-                              {invoice.terms?.trim() && (
-                                <div>
-                                  <h4 className="font-medium text-gray-900 mb-2">Términos y Condiciones:</h4>
-                                  <p className="text-gray-700 whitespace-pre-line">{invoice.terms}</p>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Totals */}
-                            <div className="text-right text-sm">
-                              <div className="space-y-2">
-                                <div className="flex justify-between">
-                                  <span>Subtotal:</span>
-                                  <span className="font-medium">
-                                    {currencySymbol} {calculateSubtotal().toFixed(2)}
-                                  </span>
-                                </div>
-                                {invoice.taxRate > 0 && (
-                                  <div className="flex justify-between">
-                                    <span>Impuesto (${invoice.taxRate}%):</span>
-                                    <span className="font-medium">
-                                      {currencySymbol} {calculateTax().toFixed(2)}
-                                    </span>
-                                  </div>
-                                )}
-                                {invoice.discountRate > 0 && (
-                                  <div className="flex justify-between text-emerald-600">
-                                    <span>Descuento (${invoice.discountRate}%):</span>
-                                    <span className="font-medium">
-                                      -{currencySymbol} {calculateDiscount().toFixed(2)}
-                                    </span>
-                                  </div>
-                                )}
-                                {invoice.shippingAmount > 0 && (
-                                  <div className="flex justify-between">
-                                    <span>Envío:</span>
-                                    <span className="font-medium">
-                                      {currencySymbol} {invoice.shippingAmount.toFixed(2)}
-                                    </span>
-                                  </div>
-                                )}
-                                <hr className="my-2" />
-                                <div className="flex justify-between text-lg font-semibold">
-                                  <span>Total:</span>
-                                  <span>
-                                    {currencySymbol} {calculateTotal().toFixed(2)}
-                                  </span>
-                                </div>
-                                {invoice.paidAmount > 0 && (
-                                  <>
-                                    <div className="flex justify-between">
-                                      <span>Cantidad Pagada:</span>
-                                      <span className="font-medium">
-                                        {currencySymbol} {invoice.paidAmount.toFixed(2)}
-                                      </span>
-                                    </div>
-                                    <div className="flex justify-between text-lg font-semibold">
-                                      <span>Saldo Adeudado:</span>
-                                      <span>
-                                        {currencySymbol} {calculateBalance().toFixed(2)}
-                                      </span>
-                                    </div>
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+        <Card className="print:shadow-none print:border-none bg-transparent lg:shadow-2xl rounded-none lg:rounded-2xl lg:w-[210mm] lg:mx-auto">
+          <CardContent className="bg-white p-4 sm:p-8 lg:p-[1.5cm]">
+            {/* Header */}
+            <div className="flex flex-col gap-4 sm:flex-row justify-between items-start mb-8">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{invoice.title}</h1>
+                <div className="text-sm text-gray-600 space-y-1">
+                  {invoice.id && <p className="text-base sm:text-lg">#{invoice.id}</p>}
+                  <p>Fecha: {invoice.date ? new Date(invoice.date).toLocaleDateString("es-ES") : "No especificada"}</p>
+                  {invoice.dueDate && <p>Vencimiento: {new Date(invoice.dueDate).toLocaleDateString("es-ES")}</p>}
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
+              <div className="sm:text-right">
+                {invoice.logoUrl && (
+                  <img
+                    src={invoice.logoUrl || "/placeholder.svg"}
+                    alt="Logo de la empresa"
+                    className="max-h-16 max-w-32 object-contain"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* From/To */}
+            {(isFromFilled || isToFilled) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-8">
+                {isFromFilled && (
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">De:</h3>
+                    <div className="text-xs sm:text-sm text-gray-700 space-y-1">
+                      {invoice.from.name && <p className="font-medium">{invoice.from.name}</p>}
+                      {invoice.from.address && <p className="whitespace-pre-line">{invoice.from.address}</p>}
+                      {invoice.from.email && <p>{invoice.from.email}</p>}
+                      {invoice.from.phone && <p>{invoice.from.phone}</p>}
+                    </div>
+                  </div>
+                )}
+                {isToFilled && (
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Para:</h3>
+                    <div className="text-xs sm:text-sm text-gray-700 space-y-1">
+                      {invoice.to.name && <p className="font-medium">{invoice.to.name}</p>}
+                      {invoice.to.address && <p className="whitespace-pre-line">{invoice.to.address}</p>}
+                      {invoice.to.email && <p>{invoice.to.email}</p>}
+                      {invoice.to.phone && <p>{invoice.to.phone}</p>}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Items Table */}
+            <div className="mb-8 overflow-x-auto">
+              <table className="w-full text-xs sm:text-sm">
+                <thead>
+                  <tr className="bg-slate-800 text-white">
+                    <th className="text-left p-2 sm:p-3 rounded-l-md w-1/2">{invoice.tableHeaders.description}</th>
+                    <th className="text-center p-2 sm:p-3">{invoice.tableHeaders.hours}</th>
+                    <th className="text-center p-2 sm:p-3">{invoice.tableHeaders.rate}</th>
+                    <th className="text-right p-2 sm:p-3 rounded-r-md">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item) => (
+                    <tr key={item.id} className="border-b">
+                      <td className="p-2 sm:p-3">{item.description}</td>
+                      <td className="p-2 sm:p-3 text-center">{item.hours}</td>
+                      <td className="p-2 sm:p-3 text-center">
+                        {currencySymbol} {(Number(item.rate) || 0).toFixed(2)}
+                      </td>
+                      <td className="p-2 sm:p-3 text-right font-medium">
+                        {currencySymbol} {((Number(item.hours) || 0) * (Number(item.rate) || 0)).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                  {items.length === 0 && (
+                    <tr>
+                      <td colSpan={4} className="p-8 text-center text-gray-400 italic">
+                        No hay artículos añadidos
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-auto border-t border-gray-200 pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Notes and Terms */}
+                <div className="space-y-6 text-xs sm:text-sm">
+                  {invoice.notes?.trim() && (
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Notas:</h4>
+                      <p className="text-gray-700 whitespace-pre-line">{invoice.notes}</p>
+                    </div>
+                  )}
+                  {invoice.terms?.trim() && (
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Términos y Condiciones:</h4>
+                      <p className="text-gray-700 whitespace-pre-line">{invoice.terms}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Totals */}
+                <div className="text-right text-xs sm:text-sm">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Subtotal:</span>
+                      <span className="font-medium">
+                        {currencySymbol} {calculateSubtotal().toFixed(2)}
+                      </span>
+                    </div>
+                    {invoice.taxRate > 0 && (
+                      <div className="flex justify-between">
+                        <span>Impuesto (${invoice.taxRate}%):</span>
+                        <span className="font-medium">
+                          {currencySymbol} {calculateTax().toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                    {invoice.discountRate > 0 && (
+                      <div className="flex justify-between text-emerald-600">
+                        <span>Descuento (${invoice.discountRate}%):</span>
+                        <span className="font-medium">
+                          -{currencySymbol} {calculateDiscount().toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                    {invoice.shippingAmount > 0 && (
+                      <div className="flex justify-between">
+                        <span>Envío:</span>
+                        <span className="font-medium">
+                          {currencySymbol} {invoice.shippingAmount.toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                    <hr className="my-2" />
+                    <div className="flex justify-between text-base sm:text-lg font-semibold">
+                      <span>Total:</span>
+                      <span>
+                        {currencySymbol} {calculateTotal().toFixed(2)}
+                      </span>
+                    </div>
+                    {invoice.paidAmount > 0 && (
+                      <>
+                        <div className="flex justify-between mt-2">
+                          <span>Cantidad Pagada:</span>
+                          <span className="font-medium">
+                            {currencySymbol} {invoice.paidAmount.toFixed(2)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-base sm:text-lg font-semibold">
+                          <span>Saldo Adeudado:</span>
+                          <span>
+                            {currencySymbol} {calculateBalance().toFixed(2)}
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
